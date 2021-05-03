@@ -2,7 +2,9 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-
+import {ThemeProvider} from 'styled-components';
+import { themes } from '@styles/variables';
+import {GlobalStyle} from '@styles/global';
 const Home = ({items}) => {
   const [isConnected, setIsConnected] = useState(true);
   useEffect(()=>{
@@ -11,10 +13,12 @@ const Home = ({items}) => {
     console.log(window.localStorage);
   })
   return (
+    <ThemeProvider theme={themes}>
+      <GlobalStyle />
     <div className={styles.container}>
       <Head>
-        <title>Best Moments</title>
-        <meta name="description" content="Let's review the best moments of your life" />
+        <title>Welcome on Best Moments</title>
+        <meta name="description" content="Welcome on Best moments to review" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
   
@@ -72,6 +76,7 @@ const Home = ({items}) => {
         </a>
       </footer>
     </div>
+    </ThemeProvider>
   )
 }
 

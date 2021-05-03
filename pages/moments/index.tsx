@@ -1,8 +1,12 @@
 import React from "react";
 import { GetStaticProps, GetServerSideProps } from 'next';
-import CardMoment from '@/components/Card';
+import Link from 'next/link'
+import Router from 'next/router'
+import CardMoment from '@components/Card';
 import styled from 'styled-components';
-const mymoments = [{ title: "titre1", description: "desc1", tags: ["#ÉTÉ", "#maison", "#nous"], publishedDate: new Date() }]
+import Pagination from '@material-ui/lab/Pagination';
+import Typography from '@material-ui/core/Typography';
+import Head from 'next/head'
 interface Moment {
   title?: string,
   content?: string,
@@ -12,17 +16,20 @@ interface Moment {
 }
 
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query: { page = 1 } }) => {
+  const limit = 9;
   try {
-    const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+    const res = await fetch(`https://jsonplaceholder.typicode.com/todos?_page=${page}&_limit=${limit}`);
     const moments = await res.json();
+    console.log("moments:",moments)
     if (!moments) {
       return {
         notFound: true,
       }
     }
     return {
-      props: { items: moments }
+      props: { items: moments, page: parseInt(page, 10),countPage:moments.length/limit },
+
     }
   } catch (error) {
 
@@ -31,6 +38,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 interface Props {
   items: Array<any>,
+  page: number,
+  countPage: number
 }
 
 const List = styled.ul`
@@ -41,16 +50,36 @@ flex-wrap: wrap;`
 const ListItem = styled.li`
 list-style-type: none;
 margin: 20px;
-max-width: 300px;
+max-width: 400px;
 `
-
-const Moments = ({items}: Props) => {
-
+const PaginationWrapper = styled.div`
+text-align:center;
+& ul{justify-content:center;}
+`
+const Moments = ({ items, page, countPage }: Props) => {
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    Router.push(`/moments/?page=${value}`)
+  };
 
   return (
-    <List>
-      {items.map((item,index) => <ListItem key={index}><CardMoment /></ListItem>)}
-    </List>
+    <div>
+      <Head>
+        <title>List of Best Moments</title>
+        <meta name="description" content="Let's review the best moments of your life" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <List>
+        {items.map((item, index) => <ListItem key={index}><CardMoment index={index} {...item} /></ListItem>)}
+      </List>
+      <PaginationWrapper>
+        <Typography>Page: {page}</Typography>
+        <Pagination
+          page={page}
+          count={countPage}
+          onChange={handleChange}
+        />
+      </PaginationWrapper>
+    </div>
   );
 };
 
