@@ -2,9 +2,8 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import SignIn from '@pages/Authentication/SignIn';
-import List from '@pages/Moments/List';
-const Home = () => {
+
+const Home = ({items}) => {
   const [isConnected, setIsConnected] = useState(true);
   useEffect(()=>{
     console.log("isConnected",window.localStorage.getItem('isConnected'))
@@ -21,13 +20,13 @@ const Home = () => {
   
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">your best moments</a>
+          Check some important <a href="/moments">moments</a>
         </h1>
-        {!isConnected ? <SignIn></SignIn> : <List></List>}
-        <p className={styles.description}>
+
+{/*         <p className={styles.description}>
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
-        </p>
+        </p> */}
   
         <div className={styles.grid}>
           {/* <a href="https://nextjs.org/docs" className={styles.card}>
