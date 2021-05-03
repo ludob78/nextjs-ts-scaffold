@@ -19,16 +19,19 @@ interface Moment {
 export const getServerSideProps: GetServerSideProps = async ({ query: { page = 1 } }) => {
   const limit = 9;
   try {
+    
+    const resCount = await fetch(`https://jsonplaceholder.typicode.com/todos`);
+    const momentsCounts = await resCount.json();
+
     const res = await fetch(`https://jsonplaceholder.typicode.com/todos?_page=${page}&_limit=${limit}`);
     const moments = await res.json();
-    console.log("moments:",moments)
     if (!moments) {
       return {
         notFound: true,
       }
     }
     return {
-      props: { items: moments, page: parseInt(page, 10),countPage:moments.length/limit },
+      props: { items: moments, page: parseInt(page, 10),countPage:momentsCounts.length/limit },
 
     }
   } catch (error) {
@@ -75,7 +78,7 @@ const Moments = ({ items, page, countPage }: Props) => {
         <Typography>Page: {page}</Typography>
         <Pagination
           page={page}
-          count={countPage}
+          count={9}
           onChange={handleChange}
         />
       </PaginationWrapper>
