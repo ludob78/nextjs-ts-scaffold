@@ -32,18 +32,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { page = 1
       }
     }
     return {
-      props: { items: moments, page: parseInt(page, 10),countPage:Math.round(momentsCounts.length/limit)},
+      props: { items: moments, page ,countPage:Math.round(momentsCounts.length/limit)},
 
     }
   } catch (error) {
-    throw new Error(error);
+    throw new Error(`Error on fetch moment:${error}`);
     
   }
 }
 
 interface Props {
   items: Array<any>,
-  page: number,
+  page: string,
   countPage: number
 }
 
@@ -81,7 +81,7 @@ const Moments = ({ items, page, countPage }: Props) => {
       <PaginationWrapper>
         <Typography>Page: {page}</Typography>
         <Pagination
-          page={page}
+          page={parseInt(page,10)}
           count={countPage}
           onChange={handleChange}
         />
