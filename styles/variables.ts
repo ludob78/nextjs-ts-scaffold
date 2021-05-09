@@ -8,7 +8,8 @@ export type ThemeDefinition = {
     "link"
     | "main"
     | "panel"
-    | "button";
+    | "button"
+    |"icon";
   
   export const themes: { [key in Theme]: ThemeDefinition } = {
     link: {
@@ -31,5 +32,10 @@ export type ThemeDefinition = {
       hover: '#e5cb2b',
       text: '#fff'
     },
+    icon: {
+      color: '#fff',
+      hover: '#333',
+      text:''
+    }
   };
   

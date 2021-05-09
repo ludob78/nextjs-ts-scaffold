@@ -1,12 +1,12 @@
 import React from "react";
 import { GetStaticProps, GetServerSideProps } from 'next';
-import Link from 'next/link'
 import Router from 'next/router'
 import CardMoment from '@components/Card';
 import styled from 'styled-components';
 import Pagination from '@material-ui/lab/Pagination';
 import Typography from '@material-ui/core/Typography';
-import Head from 'next/head'
+import Head from 'next/head';
+import Layout from '@components/Layout';
 interface Moment {
   title?: string,
   content?: string,
@@ -52,10 +52,10 @@ display: flex;
 flex-direction: row;
 flex-wrap: wrap;
 justify-content: space-around;
+padding:0;
 `
 
 const ListItem = styled.li`
-list-style-type: none;
 margin: 20px;
 max-width: 400px;
 `
@@ -69,24 +69,28 @@ const Moments = ({ items, page, countPage }: Props) => {
   };
 
   return (
-    <div>
-      <Head>
-        <title>List of Best Moments</title>
-        <meta name="description" content="Let's review the best moments of your life" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <List>
-        {items.map((item, index) => <ListItem key={index}><CardMoment index={index} {...item} /></ListItem>)}
-      </List>
-      <PaginationWrapper>
-        <Typography>Page: {page}</Typography>
-        <Pagination
-          page={parseInt(page,10)}
-          count={countPage}
-          onChange={handleChange}
-        />
-      </PaginationWrapper>
-    </div>
+    <Layout>
+      <div>
+        <Head>
+          <title>List of Best Moments</title>
+          <meta name="description" content="Let's review the best moments of your life" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main>
+          <List>
+            {items.map((item, index) => <ListItem key={index} className={'item-moment'}><CardMoment index={index} {...item} /></ListItem>)}
+          </List>
+          <PaginationWrapper>
+            <Typography>Page: {page}</Typography>
+            <Pagination
+              page={parseInt(page,10)}
+              count={countPage}
+              onChange={handleChange}
+            />
+          </PaginationWrapper>
+        </main>
+      </div>
+    </Layout>
   );
 };
 

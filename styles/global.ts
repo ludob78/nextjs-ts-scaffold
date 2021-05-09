@@ -1,15 +1,33 @@
-import {createGlobalStyle} from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
 html,
 body {
   background-color: #333;
+  color:#fff;
+  // text-align:center;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
 
+    & header{
+      & h1{
+        text-align:center;
+      }
+      & nav ul{
+        display:flex;
+        & li{
+          margin-right:50px;
+          align-self:center;
+        }
+      }
+    }
+}
+/* .item-moment{
+  margin: 20px !important;
+  max-width: 400px !important;
+} */
 a {
   color: inherit;
   text-decoration: none;
@@ -19,15 +37,10 @@ a {
   box-sizing: border-box;
 }
 
-.container {
-    min-height: 100vh;
-    padding: 0 0.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+li {
+  list-style-type:none;
+}
+
   
   .main {
     padding: 5rem 0;
@@ -90,14 +103,6 @@ a {
       Bitstream Vera Sans Mono, Courier New, monospace;
   }
   
-  .grid {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: 800px;
-    margin-top: 3rem;
-  }
   
   .card {
     margin: 1rem;
