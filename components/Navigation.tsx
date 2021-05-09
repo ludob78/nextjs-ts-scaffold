@@ -17,7 +17,7 @@ function Navigation({ }: Props): ReactElement {
             <ul>
                 <li><Link href={"/"}>
                         <IconButton aria-label="add to favorites">
-                            <Home color={themes.button.color} />
+                            <Home />
                         </IconButton>
                     </Link></li>
                 {linksList.map(link => <li><Link href={link.href}>{link.label}</Link></li>)}
