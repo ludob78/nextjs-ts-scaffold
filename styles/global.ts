@@ -21,6 +21,9 @@ body {
           margin-right:50px;
           align-self:center;
         }
+        & [class~='group-1']:last-of-type {
+          flex:1;
+        }
       }
     }
 }

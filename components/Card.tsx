@@ -10,18 +10,19 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ThumbUp from "@material-ui/icons/ThumbUp";
 import ShareIcon from "@material-ui/icons/Share";
 // import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import styled from 'styled-components';
 import ReactPlayer from 'react-player';
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+
 const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -155,32 +156,32 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-    index: number
+    index?: number
 }
 
-const CardMoment = (props: Props) => {
+const CardMoment = ({index,item,...props}: Props) => {
     const classes = useStyles();
     return (
         <Card className={classes.root}>
             <CardHeader
-                avatar={
+               /*  avatar={
                     <Avatar aria-label="recipe" className={classes.avatar}>
                         R
             </Avatar>
-                }
+                } */
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
+                <IconButton aria-label="settings">
+                    <MoreVertIcon />
+                </IconButton>
                 }
-                title="Shrimp and Chorizo Paella"
+                // title={item.title}
                 subheader="September 14, 2016"
             />
             <ReactPlayer url="/placeholder-video.mp4" controls width={"100%"} height={"100%"} />
             <CardContent>
                 <Autocomplete
                     multiple
-                    id={`tags-filled-${props.index}`}
+                    id={`tags-filled-${index}`}
                     limitTags={2}
                     options={top100Films.map((option) => option.title)}
                     defaultValue={[top100Films[13].title]}

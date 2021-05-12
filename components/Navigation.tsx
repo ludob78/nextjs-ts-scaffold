@@ -2,25 +2,32 @@ import React, { ReactElement } from 'react'
 import Link from 'next/link';
 import IconButton from "@material-ui/core/IconButton";
 import Home from "@material-ui/icons/Home";
-import { themes } from '@styles/variables';
+import styled from "styled-components";
 interface Props {
 
 }
+
+ const IconButtonStyled = styled(IconButton)`
+ & svg{
+     color:#fff;
+ }
+ `
+
 const linksList = [
-    { href: "/moments", label: "Public" },
-    { href: "/signin", label: "Signin" },
-    { href: "/signout", label: "Signout" },
+    { href: "/moments", label: "Public", class:"navigation-item group-1" },
+    { href: "/signin", label: "Signin", class:"navigation-item group-2" },
+    { href: "/signout", label: "Signout", class:"navigation-item group-2" },
 ]
 function Navigation({ }: Props): ReactElement {
     return (
         <nav>
             <ul>
-                <li><Link href={"/"}>
-                        <IconButton aria-label="add to favorites">
+                <li className={"navigation-item group-1"}><Link href={"/"}>
+                        <IconButtonStyled aria-label="add to favorites">
                             <Home />
-                        </IconButton>
+                        </IconButtonStyled>
                     </Link></li>
-                {linksList.map(link => <li><Link href={link.href}>{link.label}</Link></li>)}
+                {linksList.map((link,key) => <li key={key} className={link.class}><Link href={link.href}>{link.label}</Link></li>)}
             </ul>
         </nav>
     )
