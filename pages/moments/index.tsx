@@ -27,7 +27,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     const res = await fetch(
       `https://jsonplaceholder.typicode.com/todos?_page=${page}&_limit=${limit}`
     );
-    const moments = await res.json();
+    var moments = await res.json();
+     moments = moments.map((moment,index)=> ({tags:index % 2 === 0 ?["sport","world"]:["game","adventure"],...moment}));
       console.log("data",moments)
     if (!moments) {
       return {
@@ -77,7 +78,7 @@ const Moments = ({ items, page, countPage }: Props) => {
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     Router.push(`/moments/?page=${value}`);
   };
-
+  const filtersReduced = items.reduce((acc,item) => acc = [...new Set([...item.tags,...acc])],[]);
   return (
     <Layout>
       <div>
@@ -89,7 +90,7 @@ const Moments = ({ items, page, countPage }: Props) => {
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Drawer></Drawer>
+        <Drawer filters={filtersReduced}></Drawer>
         <main>
           <List>
             {items.map((item, index) => (

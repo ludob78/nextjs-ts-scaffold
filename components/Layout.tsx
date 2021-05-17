@@ -6,7 +6,7 @@ import TopHeader from './TopHeader';
 import Footer from './Footer';
 const LayoutStyled = styled.div`
 background-color:${props => props.theme.panel.color};
-padding-bottom:30px;
+padding:30px;
 `
 
 interface Props {

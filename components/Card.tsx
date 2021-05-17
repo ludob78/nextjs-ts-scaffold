@@ -157,6 +157,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
     index?: number
+    item?: any,
 }
 
 const CardMoment = ({index,item,...props}: Props) => {
@@ -164,11 +165,6 @@ const CardMoment = ({index,item,...props}: Props) => {
     return (
         <Card className={classes.root}>
             <CardHeader
-               /*  avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
-                        R
-            </Avatar>
-                } */
                 action={
                 <IconButton aria-label="settings">
                     <MoreVertIcon />
