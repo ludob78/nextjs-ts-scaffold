@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,6 +14,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
   list: {
@@ -35,31 +36,39 @@ const useStyles = makeStyles({
     margin: "0 10px",
   }
 });
+interface TagsType {
+  name: string;
+}
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-type Filters = ['Inbox', 'Starred', 'Send email', 'Drafts'];
 
 //Request backend to get required Filters
+const fetchTags = async () => {
+  const tags = await new Promise((res, rej) => {
+    setTimeout(() => res(["game", "adventure"]), 5000)
+  })
+  return tags
+}
 
 export default function TempDrawer({ filters }) {
   const classes = useStyles();
-  const [state, setState] = React.useState({
+  const [position, setPosition] = React.useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
 
-  const [tags, setTags] = React.useState([]);
+  const [options, setOptions] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const loading = open && options.length === 0;
 
-  const handleChangeTags = (e) => {
-      e.target.innerHTML ? setTags(prevState => [...prevState, e.target.innerHTML]) : setTags([]);
-  }
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent,
   ) => {
+
     if (
       event.type === 'keydown' &&
       ((event as React.KeyboardEvent).key === 'Tab' ||
@@ -68,8 +77,33 @@ export default function TempDrawer({ filters }) {
       return;
     }
 
-    setState({ ...state, [anchor]: open });
+    setPosition({ ...position, [anchor]: open });
   };
+
+  useEffect(() => {
+    let active = true;
+    if (!loading) {
+      return undefined;
+    }
+
+    (async () => {
+      const res = await fetchTags();
+
+      if (active) {
+        setOptions(prevState => ([...prevState, ...res as TagsType[]]));
+      }
+    })();
+
+    return () => {
+      active = false;
+    }
+  }, [loading])
+
+  useEffect(() => {
+    if (!position.left) {
+      setOptions([]);
+    }
+  }, [position]);
 
   const list = (anchor: Anchor, filters = ['Tag']) => (
     <div
@@ -77,8 +111,6 @@ export default function TempDrawer({ filters }) {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
       role="presentation"
-    // onClick={toggleDrawer(anchor, false)}
-    // onKeyDown={toggleDrawer(anchor, false)}
     >
       <List
         component="nav"
@@ -91,20 +123,34 @@ export default function TempDrawer({ filters }) {
         }>
         <Autocomplete
           multiple
-          id={`tags-filter`}
-          className={classes.autoComplete}
-          limitTags={2}
-          options={filters}
-          defaultValue={tags || []}
-          onChange={handleChangeTags}
-          freeSolo
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-            ))
-          }
+          id="asynchronous-demo"
+          style={{ width: 300 }}
+          open={open}
+          onOpen={() => {
+            setOpen(true);
+          }}
+          onClose={() => {
+            setOpen(false);
+          }}
+          getOptionSelected={(option, value) => option === value}
+          getOptionLabel={(option) => option}
+          options={options}
+          loading={loading}
           renderInput={(params) => (
-            <TextField {...params} variant="standard" label="Tags" placeholder="#" />
+            <TextField
+              {...params}
+              label="Tags"
+              variant="outlined"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
           )}
         />
       </List>
@@ -121,7 +167,7 @@ export default function TempDrawer({ filters }) {
           <IconButton className={classes.button} onClick={toggleDrawer(anchor, true)} aria-label="settings">
             <FilterList />
           </IconButton>
-          <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+          <Drawer anchor={anchor} open={position[anchor]} onClose={toggleDrawer(anchor, false)}>
             {list(anchor, filters)}
           </Drawer>
         </React.Fragment>
